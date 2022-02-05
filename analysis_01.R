@@ -1,6 +1,7 @@
 # Libraries
 library(tidyverse)
 
+
 # Data acquisition
 df00 <- read_csv("gdp_pc_productivity.csv")
 
@@ -14,7 +15,7 @@ df00 %>%
   distinct(Country)
 
 
-# Distinct instances of Country 
+# Top 10 Countries with most hour worked per person
 df00 %>% 
   filter(Time == 2020 & Subject == "Average hours worked per person employed") %>% 
   select(Country,
@@ -24,31 +25,36 @@ df00 %>%
             with_ties = FALSE) %>% 
   ggplot(aes(x = Value, 
              y = reorder(Country, Value))) + 
-  geom_col(fill = "steelblue",
-           alpha = 0.85) 
+    geom_col(fill = "darkgreen",
+             alpha = 0.70) +
+    geom_text(aes(label = format(round(Value), 1, 
+                                 big.mark = ","),
+                  hjust = 1.3),
+              color = "grey95")
+  
 
-
-
+# Top 3 countries with most hours worked per person 2018-2020
 df00 %>% 
-  filter(`Employment status` == "Total employment") %>% 
+  filter(Subject == "Average hours worked per person employed") %>% 
   filter(Time > 2017) %>% 
   select(Country,
          Time,
          Value) %>% 
   group_by(Time) %>%
   slice_max(order_by = Value, 
-            n = 3, 
+            n = 5, 
             with_ties = FALSE) %>% 
-  ggplot(aes(y = reorder(Country, Value), 
+  ggplot(aes(y = fct_reorder(Country, Value), 
              x = Value)) +
-  geom_col(fill = "darkgreen", 
-           alpha = 0.7) +
-  geom_text(aes(label = format(round(Value, 1), big.mark = ","),
-                hjust = 1.3), 
-            color = "grey85", 
-            size = 3) +
-  facet_grid(Time ~ ., 
-             scales = "free") +
-  theme(axis.title.y = element_blank()) +
-  labs(title = "Horas Trabajadas por Persona Empleada",
-       x = "Horas trabajadas por persona empleada")
+    geom_col(fill = "darkgreen", 
+             alpha = 0.7) +
+    geom_text(aes(label = format(round(Value, 1), big.mark = ","),
+                  hjust = 1.3), 
+              color = "grey85", 
+              size = 3) +
+    facet_grid(Time ~ ., 
+               scales = "free") +
+    theme(axis.title.y = element_blank()) +
+    labs(title = "Horas Trabajadas por Persona Empleada",
+         x = "Horas trabajadas")
+
