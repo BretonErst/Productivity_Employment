@@ -388,6 +388,7 @@ ggsave("wp_07", plot = wp_07, device = "tiff")
 
 
 ## Gross National Income per hour worked
+# Data frame
 df02 <- df00 %>% 
   filter(Subject == "Gross national income per hour worked") %>% 
   select(-c(Subject, MEASURE, Measure, Time, `Unit Code`, `PowerCode Code`,
@@ -454,7 +455,7 @@ df02 %>%
        x = "USD per hour",
        caption = "<i>Elaboración propia</i><br>Source: OECD")
 
-
+# 2020 GNI per hour
 df02 %>% 
   filter(!LOCATION %in% c("OECD", "BRIICS", "G-7", 
                           "EU27_2020", "EA19")) %>% 
@@ -462,18 +463,29 @@ df02 %>%
   drop_na(GNIHRS) %>%
   ggplot(aes(x = GNIHRS,
              y = fct_reorder(Country, GNIHRS))) + 
-  geom_col(fill = "darkgreen",
-           alpha = 0.7) +
-  geom_text(aes(label = paste("$", 
-                              format(round(GNIHRS, 2), 
-                                     big.mark = ",")),
-                hjust = 1.3),
-            color = "grey85",
-            size = 2) +
-  theme(axis.title.y = element_blank()) +
-  labs(title = "Income Per Hour Worked 2020",
-       subtitle = "USD Current PPPs",
-       x = "USD per hour")
+    geom_col(fill = "#2471A3",
+             alpha = 0.7) +
+    geom_text(aes(label = paste("$", 
+                                format(round(GNIHRS, 2), 
+                                       big.mark = ",")),
+                  hjust = 1.3),
+              color = "grey85",
+              size = 2) +
+    theme(text = element_text(family = "Optima"),
+          panel.background = element_rect(fill = "#FFFFFF"),
+          axis.line = element_line(color = "darkgrey"),
+          plot.title.position = "plot",
+          plot.caption = element_markdown(color = "darkgrey",
+                                          hjust = 0),
+          plot.caption.position = "plot") +
+    labs(title = "How Much Workers Make Per Hour?",
+         subtitle = "Comparison in USD Current PPPs",
+         x = "USD Current PPPs",
+         y = NULL,
+         caption = "Source: OECD. <i>Gross national income per 
+         hour worked 2020</i><br>Visualization: Juan L. Bretón, PMP
+         (@BretonPmp)") +
+    scale_x_continuous(labels = scales::dollar_format())
 
 
 # iPhone Index (8 hour work journey)
@@ -485,20 +497,38 @@ df02 %>%
   mutate(iPhone_index = (999 / GNIHRS) / 8) %>% 
   ggplot(aes(x = iPhone_index,
              y = fct_reorder(Country, iPhone_index))) + 
-   geom_col(fill = "darkgreen",
-            alpha = 0.7) +
-   geom_text(aes(label = format(round(iPhone_index, 2), 
-                                big.mark = ","),
-                 hjust = 1.2),
-             color = "grey85",
+    geom_point(color = "#2471A3",
+             alpha = 0.7,
              size = 2) +
-   theme(axis.title.y = element_blank(),
-         plot.caption = element_markdown(color = "darkgrey")) +
-    labs(title = "iPhone Index 2020",
-         subtitle = "USD Current PPPs",
-         x = "8-hour Work Journey",
-         caption = "Source: OECD")
+    geom_col(fill = "#2471A3",
+             width = 0.1,
+             alpha= 0.7) +
+    geom_text(aes(label = format(round(iPhone_index, 2), 
+                                 big.mark = ","),
+                  hjust = -0.8),
+              color = "grey45",
+              size = 3) +
+    theme(text = element_text(family = "Optima"),
+          panel.background = element_rect(fill = "#F9F9F9"),
+          panel.grid.major.y = element_blank(),
+          axis.line = element_line(color = "darkgrey"),
+          plot.title.position = "plot",
+          plot.caption = element_markdown(color = "darkgrey",
+                                          hjust = 0),
+          plot.caption.position = "plot") +
+    labs(title = "How Long To Buy An iPhone 13?",
+         subtitle = "Number of 8-hour journeys of work",
+         x = "8-hour journey",
+         y = NULL,
+         caption = "Source: OECD. <i>Gross national income per 
+         hour worked 2020. Iphone 13 priced at USD $999. Values in 
+         USD Current PPPs</i>
+         <br>Visualization: Juan L. Bretón, PMP
+         (@BretonPmp)") +
+    scale_x_continuous(limits = c(0, 6)) -> wp_08
 
+# Save plot
+ggsave("wp_08", plot = wp_08, device = "tiff")
 
 
 # Evolution of Gross Income per Hour
@@ -520,12 +550,22 @@ df02 %>%
                     segment.alpha = 0.5,
                     segment.linetype = "dotted") +
     scale_x_continuous(limits = c(1970, 2027.5)) +
-    theme(legend.position = "none",
-          plot.caption = element_markdown(color = "darkgrey"),
+    theme(text = element_text(family = "Optima"),
+          panel.background = element_rect(fill = "#F9F9F9"),
+          panel.grid.major.x = element_blank(),
+          axis.line = element_line(color = "darkgrey"),
+          legend.position = "none",
+          plot.title.position = "plot",
+          plot.caption = element_markdown(color = "darkgrey",
+                                          hjust = 0),
           plot.caption.position = "plot") +
     labs(title = "Gross National Income Per Hour Worked",
-         subtitle = "Current USD ",
-         caption = "<i>Elaboración propia</i><br>Source: OECD")
+         subtitle = "Number of 8-hour journeys of work",
+         x = NULL,
+         y = "USD current PPPs",
+         caption = "Source: OECD. <i>Gross national income per 
+         hour worked 1970 - 2020. </i>
+         <br>Visualization: Juan L. Bretón, PMP (@BretonPmp)") -> wp_09
 
 
 # Data frame for as percent
