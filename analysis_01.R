@@ -503,7 +503,7 @@ df02 %>%
     geom_col(fill = "#2471A3",
              width = 0.1,
              alpha= 0.7) +
-    geom_text(aes(label = format(round(iPhone_index, 2), 
+    geom_text(aes(label = format(round(iPhone_index, 1), 
                                  big.mark = ","),
                   hjust = -0.8),
               color = "grey45",
@@ -517,7 +517,7 @@ df02 %>%
                                           hjust = 0),
           plot.caption.position = "plot") +
     labs(title = "How Long To Buy An iPhone 13?",
-         subtitle = "Number of 8-hour journeys of work",
+         subtitle = "8-hour journeys of work necessary",
          x = "8-hour journey",
          y = NULL,
          caption = "Source: OECD. <i>Gross national income per 
