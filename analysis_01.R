@@ -9,7 +9,7 @@ library(tidyverse)
 library(tidytext)
 library(ggrepel)
 library(ggtext)
-library(showtext)
+#library(showtext)
 
 
 ## Data acquisition
@@ -100,7 +100,7 @@ df00 %>%
           plot.caption = element_markdown(color = "darkgrey",
                                           hjust = 0),
           plot.caption.position = "plot") +
-    labs(title = "Where Do People Work The Most?",
+    labs(title = "Where Do People Work The Most Hours?",
          subtitle = "Hours Worked Per Person, Top 3 Countries Per Year",
          x = "Hours worked annually per person",
          y = NULL,
@@ -237,7 +237,7 @@ ggsave("wp_01", plot = wp_01, device = "tiff")
 
 ## Change in GDPHRS
 # Min value
-gdp_min <- df_plot1 %>% 
+gdp_min <- df_spread %>% 
   select(Country, TIME, GDPHRS) %>% 
   mutate(decade = 10 * (TIME %/% 10)) %>% 
   group_by(Country) %>% 
@@ -245,7 +245,7 @@ gdp_min <- df_plot1 %>%
   mutate(min = GDPHRS)
   
 # Max value
-gdp_max <- df_plot1 %>% 
+gdp_max <- df_spread %>% 
   select(Country, TIME, GDPHRS) %>% 
   mutate(decade = 10 * (TIME %/% 10)) %>% 
   group_by(Country) %>% 
@@ -380,11 +380,14 @@ df01 %>%
          caption = "Source: OECD. <i>Gross domestic product per hour worked
          1970 - 2020</i><br>Visualization: Juan L. Bretón, PMP
          (@BretonPmp)") +
-    scale_x_continuous(labels = scales::dollar_format()) 
+    scale_x_continuous(labels = scales::dollar_format()) -> wp_07
+
+# Save plot
+ggsave("wp_07", plot = wp_07, device = "tiff")
 
 
 
-# Gross National Income per hour worked
+## Gross National Income per hour worked
 df02 <- df00 %>% 
   filter(Subject == "Gross national income per hour worked") %>% 
   select(-c(Subject, MEASURE, Measure, Time, `Unit Code`, `PowerCode Code`,
@@ -482,19 +485,19 @@ df02 %>%
   mutate(iPhone_index = (999 / GNIHRS) / 8) %>% 
   ggplot(aes(x = iPhone_index,
              y = fct_reorder(Country, iPhone_index))) + 
-  geom_col(fill = "darkgreen",
-           alpha = 0.7) +
-  geom_text(aes(label = format(round(iPhone_index, 2), 
-                               big.mark = ","),
-                hjust = 1.2),
-            color = "grey85",
-            size = 2) +
-  theme(axis.title.y = element_blank(),
-        plot.caption = element_markdown(color = "darkgrey")) +
-  labs(title = "iPhone Index 2020",
-       subtitle = "USD Current PPPs",
-       x = "8-hour Work Journey",
-       caption = "Source: OECD")
+   geom_col(fill = "darkgreen",
+            alpha = 0.7) +
+   geom_text(aes(label = format(round(iPhone_index, 2), 
+                                big.mark = ","),
+                 hjust = 1.2),
+             color = "grey85",
+             size = 2) +
+   theme(axis.title.y = element_blank(),
+         plot.caption = element_markdown(color = "darkgrey")) +
+    labs(title = "iPhone Index 2020",
+         subtitle = "USD Current PPPs",
+         x = "8-hour Work Journey",
+         caption = "Source: OECD")
 
 
 
