@@ -4,7 +4,7 @@
 ##                                           ##
 ###############################################
 
-# Libraries
+## Libraries
 library(tidyverse)
 library(tidytext)
 library(ggrepel)
@@ -12,14 +12,14 @@ library(ggtext)
 library(showtext)
 
 
-# Data acquisition
+## Data acquisition
 df00 <- read_csv("gdp_pc_productivity.csv")
 
-# Font instalation
-font_add_google(family = "roboto", "Roboto")
-
-showtext_auto()
-
+## Code for measure definition
+code_subject <- df00 %>% 
+  select(SUBJECT, Subject, MEASURE, Measure, Unit, PowerCode) %>% 
+  mutate(SUBJECT = str_match(SUBJECT, "T.(\\w*)")[ , 2]) %>% 
+  unique()
 
 # Distinct instances of time
 df00 %>% 
@@ -30,6 +30,7 @@ df00 %>%
   distinct(Country)
 
 
+## Hours Worked Annually
 # Top 10 Countries with most hour worked per person
 df00 %>% 
   filter(Time == 2020 & Subject == "Average hours worked per person employed") %>% 
@@ -46,14 +47,27 @@ df00 %>%
                                  big.mark = ","),
                   hjust = 1.3),
               color = "grey85") +
-    theme(plot.caption = element_markdown(color = "darkgrey")) +
-    labs(title = "Hours Worked Per Person Employed 2020",
-         subtitle = "Top 10 Countries",
-         x = "Hours worked",
-         y = " ",
-         caption = "Source: OECD<br>Visualization: Juan L. Bretón, PMP
-         (@BretonPmp)")
+    theme(text = element_text(family = "Optima"),
+          legend.position = "none",
+          panel.background = element_rect(fill = "#FFFFFF"),
+          axis.line = element_line(color = "darkgrey"),
+          plot.title.position = "plot",
+          plot.caption = element_markdown(color = "darkgrey",
+                                          hjust = 0),
+          plot.caption.position = "plot") +
+    labs(title = "Mexican Workers Spend The Most Time On The Job",
+         subtitle = "Top 10 Countries Hours Worked Per Person",
+         x = "Hours worked annually per person",
+         y = NULL,
+         caption = "Source: OECD.
+         <i>Average hours worked annually per person employed year 2020
+         </i><br>Visualization: Juan L. Bretón, PMP 
+         (@BretonPmp)") +
+    scale_x_continuous(labels = scales::label_number()) -> wp_02
   
+# Plot save
+ggsave(filename = "wp_02", plot = wp_02, device = "tiff")
+
 
 # Top 3 countries with most hours worked per person 2017-2020
 df00 %>% 
@@ -78,25 +92,31 @@ df00 %>%
               size = 3) +
     facet_grid(Time ~ ., 
                scales = "free") +
-    theme(axis.title.y = element_blank(),
-          plot.caption = element_markdown(color = "darkgrey")) +
-    labs(title = "Hours Worked Per Person Employed",
-         subtitle = "Top 3 Countries Per Year",
-         x = "Hours worked",
-         caption = "Source: OECD<br>Visualization: Juan L. Bretón, PMP
-         (@BretonPmp)") +
-    scale_y_reordered()
+    theme(text = element_text(family = "Optima"),
+          legend.position = "none",
+          panel.background = element_rect(fill = "#FFFFFF"),
+          axis.line = element_line(color = "darkgrey"),
+          plot.title.position = "plot",
+          plot.caption = element_markdown(color = "darkgrey",
+                                          hjust = 0),
+          plot.caption.position = "plot") +
+    labs(title = "Where Do People Work The Most?",
+         subtitle = "Hours Worked Per Person, Top 3 Countries Per Year",
+         x = "Hours worked annually per person",
+         y = NULL,
+         caption = "Source: OECD. <i>Hours worked per person employed
+         20217 - 2020.</i> 
+         <br>Visualization: Juan L. Bretón, PMP (@BretonPmp)") +
+    scale_y_reordered() +
+    scale_x_continuous(labels = scales::label_number()) -> wp_03
+
+# Save plot
+ggsave(filename = "wp_03", plot = wp_03, device = "tiff")
 
 
-# Code for measure definition
-code_subject <- df00 %>% 
-  select(SUBJECT, Subject, MEASURE, Measure, Unit, PowerCode) %>% 
-  mutate(SUBJECT = str_match(SUBJECT, "T.(\\w*)")[ , 2]) %>% 
-  unique()
 
 
-
-# Data frame for USD Current PPPs
+## Data frame for USD Current PPPs
 df01 <- df00 %>% 
   filter(MEASURE == "CPC") %>% 
   select(-c(Subject, MEASURE, Measure, Time, `Unit Code`, `PowerCode Code`,
@@ -106,11 +126,12 @@ df01 <- df00 %>%
   pivot_wider(names_from = SUBJECT, 
               values_from = Value)
 
-# Evolution of GDP per hour worked
+
+# Plot of Evolution of GDP per hour worked
 df01 %>% 
   filter(Country %in% c("Mexico", "United States",
                         "Canada", "Chile", "Ireland",
-                        "Norway", "Spain")) %>% 
+                        "Norway", "Spain", "Costa Rica")) %>% 
   mutate(max_va = ifelse(TIME == 2020, Country, NA)) %>% 
   ggplot(aes(x = TIME, 
              y = GDPHRS, 
@@ -125,35 +146,46 @@ df01 %>%
                     segment.alpha = 0.5,
                     segment.linetype = "dotted") +
     scale_x_continuous(limits = c(1970, 2027.5)) +
-    theme(legend.position = "none",
-          plot.caption = element_markdown(color = "darkgrey"),
+    theme(text = element_text(family = "Optima"),
+          legend.position = "none",
+          panel.background = element_rect(fill = "#FFFFFF"),
+          axis.line = element_line(color = "darkgrey"),
+          plot.title.position = "plot",
+          plot.caption = element_markdown(color = "darkgrey",
+                                          hjust = 0),
           plot.caption.position = "plot") +
-    labs(title = "Gross Domestic Product Per Hour Worked",
-         subtitle = "USD Current PPPs ",
-         x = "Year",
-         caption = "Source: OECD<br>Visualization: Juan L. Bretón, PMP
-         (@BretonPmp)")
+    labs(title = "Evolution Of Work Productivity",
+         subtitle = "Gross Domestic Product Per Hour Worked",
+         x = NULL,
+         y = "USD current PPPs",
+         caption = "Source: OECD. <i>Gross Domestic Product Per Hour Worked
+         1970 - 2020. Selected countries.</i>
+         <br>Visualization: Juan L. Bretón, PMP (@BretonPmp)") +
+    scale_y_continuous(labels = scales::dollar_format()) -> wp_04
+
+# Save plot
+ggsave(filename = "wp_04", plot = wp_04, device = "tiff")
 
 
+## Spread of GDP per hour worked
 # Preparation of data frame
-## GDP Per Hour Worked
-df_plot1 <- df01 %>%
+df_spread <- df01 %>%
   filter(Country %in% c("Mexico", "United States",
                         "Canada", "Chile", "Ireland",
                         "Norway", "Spain", "Germany",
-                        "Costa Rica", "Korea")) %>%
+                        "Costa Rica", "Korea", "Colombia")) %>%
   filter(TIME >1989) %>% 
   mutate(val20 = ifelse(TIME == 2020, GDPHRS, NA),
          destaca = (Country == "Mexico"))
   
 # Median value GDPHRS 2020
-valor_medio <- df_plot1 %>% 
+valor_medio <- df_spread %>% 
   summarize(media = median(val20, na.rm = TRUE)) %>% 
   pull()
 
 
-# Visualization of Data
-wp_01 <- df_plot1 %>%
+# Visualization of Spread of GDPHRS
+df_spread %>%
   ggplot(aes(x = GDPHRS, 
              y = Country,
              color = destaca)) +
@@ -162,7 +194,7 @@ wp_01 <- df_plot1 %>%
                 alpha = 0.6) +
     geom_point(aes(x = val20),
                size = 1.5) +
-    geom_point(data = df_plot1 %>% 
+    geom_point(data = df_spread %>% 
                  filter(TIME == 2020),
                pch = 21,
                size = 4, 
@@ -173,7 +205,7 @@ wp_01 <- df_plot1 %>%
                color = "midnightblue",
                alpha = 0.4) +
     geom_label(aes(x = valor_medio, 
-                  y = 10.47, 
+                  y = 11.49, 
                   label = scales::dollar(valor_medio)),
                size = 2.5,
                color = "midnightblue") +
@@ -186,7 +218,7 @@ wp_01 <- df_plot1 %>%
                                           hjust = 0),
           plot.caption.position = "plot") +
     labs(title = "Mexican Work Productivity Lags In OECD",
-         subtitle = "Evolution Of GDP Per Hour Worked 1990 - 2020",
+         subtitle = "Spread Of GDP Per Hour Worked 1990 - 2020",
          x = "USD Current PPPs",
          y = NULL,
          caption = "Source: OECD. <i>Gross Domestic Product per hour worked 
@@ -197,13 +229,14 @@ wp_01 <- df_plot1 %>%
                        labels = scales::dollar_format(),
                        breaks = c(0, 25, 50, 75, 100, 125)) +
     scale_color_manual(breaks = c(F, T),
-                       values = c("#AAAAAA", "darkred"))
+                       values = c("#AAAAAA", "darkred")) -> wp_01
 
 # Save plot
 ggsave("wp_01", plot = wp_01, device = "tiff")
 
-# Change in GDPHRS
-# Min
+
+## Change in GDPHRS
+# Min value
 gdp_min <- df_plot1 %>% 
   select(Country, TIME, GDPHRS) %>% 
   mutate(decade = 10 * (TIME %/% 10)) %>% 
@@ -211,7 +244,7 @@ gdp_min <- df_plot1 %>%
   slice_min(order_by = GDPHRS, with_ties = FALSE) %>% 
   mutate(min = GDPHRS)
   
-# Max
+# Max value
 gdp_max <- df_plot1 %>% 
   select(Country, TIME, GDPHRS) %>% 
   mutate(decade = 10 * (TIME %/% 10)) %>% 
@@ -223,7 +256,8 @@ gdp_max <- df_plot1 %>%
 gdp_change <- gdp_min %>%
   inner_join(gdp_max, by = "Country") %>% 
   select(!c("GDPHRS.x", "decade.x", "GDPHRS.y", "decade.y")) %>% 
-  mutate(change = scales::percent((max - min) / min, accuracy = 0.01)) %>% 
+  mutate(dife = max - min,
+         change = scales::percent((max - min) / min, accuracy = 0.01)) %>% 
   arrange(desc(change))
 
 
@@ -253,17 +287,23 @@ df01 %>%
                scales = "free") +
     scale_y_reordered() +
     theme(text = element_text(family = "Optima"),
-          axis.title.y = element_blank(),
+          panel.background = element_rect(fill = "#FFFFFF"),
+          axis.line = element_line(color = "darkgrey"),
           plot.title.position = "plot",
           plot.caption = element_markdown(color = "darkgrey",
                                           hjust = 0),
           plot.caption.position = "plot") +
-    labs(title = "GDP Per Hour Worked",
-         subtitle = "Top 5 in USD Current PPPs",
+    labs(title = "The Most Productive Work Systems",
+         subtitle = "Top 5 Countries",
          x = "USD Current PPPs",
-         caption = "Source:OECD<br>Visualization: Juan L. Bretón, PMP
+         y = NULL,
+         caption = "Source: OECD. <i>Gross domestic product per hour worked
+         2017 - 2020</i><br>Visualization: Juan L. Bretón, PMP
          (@BretonPmp)") +
-    scale_x_continuous(labels = scales::dollar_format())
+    scale_x_continuous(labels = scales::dollar_format()) -> wp_05
+
+# Save plot
+ggsave("wp_05", plot = wp_05, device = "tiff")
 
 
 # Bottom 5 Countries GDPHRS
@@ -279,28 +319,38 @@ df01 %>%
              y = reorder_within(x = Country, 
                                 by = GDPHRS, 
                                 within = TIME))) + 
-  geom_col(fill = "steelblue",
-           alpha = 0.7) +
-  geom_text(aes(label = paste("$", 
-                              format(round(GDPHRS, 2), 
-                                     big.mark = ",")),
-                hjust = 1.3),
-            color = "grey85",
-            size = 3) +
-  facet_grid(rows = vars(TIME), 
-             scales = "free") +
-  scale_y_reordered() +
-  theme(axis.title.y = element_blank(),
-        plot.caption = element_markdown(color = "darkgrey")) +
-  labs(title = "GDP Per Hour Worked",
-       subtitle = "Bottom 5 in USD Current PPPs",
-       x = "USD",
-       caption = "Source:OECD<br>Visualization: Juan L. Bretón, PMP
-         (@BretonPmp)")
+    geom_col(fill = "darkred",
+             alpha = 0.65) +
+    geom_text(aes(label = paste("$", 
+                                format(round(GDPHRS, 2), 
+                                       big.mark = ",")),
+                  hjust = 1.3), 
+              color = "grey85",
+              size = 3) +
+    facet_grid(rows = vars(TIME), 
+               scales = "free") +
+    scale_y_reordered() +
+    theme(text = element_text(family = "Optima"),
+          panel.background = element_rect(fill = "#FFFFFF"),
+          axis.line = element_line(color = "darkgrey"),
+          plot.title.position = "plot",
+          plot.caption = element_markdown(color = "darkgrey",
+                                          hjust = 0),
+          plot.caption.position = "plot") +
+    labs(title = "The Least Productive Work Systems",
+         subtitle = "Top 5 Countries",
+         x = "USD Current PPPs",
+         y = NULL,
+         caption = "Source: OECD. <i>Gross domestic product per hour worked
+         2017 - 2020</i><br>Visualization: Juan L. Bretón, PMP
+         (@BretonPmp)") +
+    scale_x_continuous(labels = scales::dollar_format()) -> wp_06
+
+# Save plot
+ggsave("wp_06", plot = wp_06, device = "tiff")
 
 
-
-# 2020
+# Plot Work productivity 2020
 df01 %>% 
   filter(!LOCATION %in% c("OECD", "BRIICS", "G-7", 
                           "EU27_2020", "EA19")) %>% 
@@ -316,13 +366,21 @@ df01 %>%
                   hjust = 1.3),
               color = "grey85",
               size = 2) +
-    theme(axis.title.y = element_blank(),
-          plot.caption = element_markdown(color = "darkgrey")) +
-    labs(title = "GDP Per Hour Worked 2020",
-         subtitle = "USD Current PPPs",
-         x = "USD",
-         caption = "Source: OECD<br>Visualization: Juan L. Bretón, PMP
-         (@BretonPmp)")
+    theme(text = element_text(family = "Optima"),
+          panel.background = element_rect(fill = "#FFFFFF"),
+          axis.line = element_line(color = "darkgrey"),
+          plot.title.position = "plot",
+          plot.caption = element_markdown(color = "darkgrey",
+                                          hjust = 0),
+        plot.caption.position = "plot") +
+    labs(title = "Productivity Of Work Systems",
+         subtitle = "Comparison in USD Current PPPs",
+         x = "USD Current PPPs",
+         y = NULL,
+         caption = "Source: OECD. <i>Gross domestic product per hour worked
+         1970 - 2020</i><br>Visualization: Juan L. Bretón, PMP
+         (@BretonPmp)") +
+    scale_x_continuous(labels = scales::dollar_format()) 
 
 
 
@@ -467,7 +525,7 @@ df02 %>%
          caption = "<i>Elaboración propia</i><br>Source: OECD")
 
 
-# Data frame for USD Current PPPs
+# Data frame for as percent
 df03 <- df00 %>% 
   filter(MEASURE == "PCTUS") %>% 
   select(-c(Subject, MEASURE, Measure, Time, `Unit Code`, `PowerCode Code`,
