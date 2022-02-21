@@ -9,7 +9,7 @@ library(tidyverse)
 library(tidytext)
 library(ggrepel)
 library(ggtext)
-#library(showtext)
+
 
 
 ## Data acquisition
@@ -59,7 +59,7 @@ df00 %>%
          subtitle = "Top 10 Countries Hours Worked Per Person",
          x = "Hours worked annually per person",
          y = NULL,
-         caption = "Source: OECD.
+         caption = "Source: OECD Stats.
          <i>Average hours worked annually per person employed year 2020
          </i><br>Visualization: Juan L. Bretón, PMP 
          (@BretonPmp)") +
@@ -104,7 +104,7 @@ df00 %>%
          subtitle = "Hours Worked Per Person, Top 3 Countries Per Year",
          x = "Hours worked annually per person",
          y = NULL,
-         caption = "Source: OECD. <i>Hours worked per person employed
+         caption = "Source: OECD Stats. <i>Hours worked per person employed
          20217 - 2020.</i> 
          <br>Visualization: Juan L. Bretón, PMP (@BretonPmp)") +
     scale_y_reordered() +
@@ -205,8 +205,8 @@ df_spread %>%
                color = "midnightblue",
                alpha = 0.4) +
     geom_label(aes(x = valor_medio, 
-                  y = 11.49, 
-                  label = scales::dollar(valor_medio)),
+                   y = 11.49, 
+                   label = scales::dollar(valor_medio)),
                size = 2.5,
                color = "midnightblue") +
     theme(text = element_text(family = "Optima"),
@@ -221,7 +221,7 @@ df_spread %>%
          subtitle = "Spread Of GDP Per Hour Worked 1990 - 2020",
          x = "USD Current PPPs",
          y = NULL,
-         caption = "Source: OECD. <i>Gross Domestic Product per hour worked 
+         caption = "Source: OECD Stats. <i>Gross Domestic Product per hour worked 
          1990 - 2020. Selected countries. Last available values highlighted 
          in blue; median value indicated.</i> 
          <br>Visualization: Juan L. Bretón, PMP (@BretonPmp)") +
