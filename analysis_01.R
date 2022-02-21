@@ -158,7 +158,7 @@ df01 %>%
          subtitle = "Gross Domestic Product Per Hour Worked",
          x = NULL,
          y = "USD current PPPs",
-         caption = "Source: OECD. <i>Gross Domestic Product Per Hour Worked
+         caption = "Source: OECD Stats. <i>Gross Domestic Product Per Hour Worked
          1970 - 2020. Selected countries.</i>
          <br>Visualization: Juan L. Bretón, PMP (@BretonPmp)") +
     scale_y_continuous(labels = scales::dollar_format()) -> wp_04
