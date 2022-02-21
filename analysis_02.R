@@ -42,8 +42,7 @@ df01 <- df00 %>%
 
 features <- df01 %>% 
   select(-c(LOCATION, Country)) %>% 
-  scale() %>% 
-  drop_na()
+  scale()
 
 rownames(features) <- df01$Country
 
