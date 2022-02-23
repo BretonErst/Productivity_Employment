@@ -223,7 +223,7 @@ df_spread %>%
          y = NULL,
          caption = "Source: OECD Stats. <i>Gross Domestic Product per hour worked 
          1990 - 2020. Selected countries. Last available values highlighted 
-         in blue; median value indicated.</i> 
+         in blue; median value indicated in blue.</i> 
          <br>Visualization: Juan L. Bretón, PMP (@BretonPmp)") +
     scale_x_continuous(limits = c(0, 130),
                        labels = scales::dollar_format(),
@@ -257,7 +257,8 @@ gdp_change <- gdp_min %>%
   inner_join(gdp_max, by = "Country") %>% 
   select(!c("GDPHRS.x", "decade.x", "GDPHRS.y", "decade.y")) %>% 
   mutate(dife = max - min,
-         change = scales::percent((max - min) / min, accuracy = 0.01)) %>% 
+         change = scales::percent((max - min) / min, 
+                                  accuracy = 0.01)) %>% 
   arrange(desc(change))
 
 
@@ -338,7 +339,7 @@ df01 %>%
                                           hjust = 0),
           plot.caption.position = "plot") +
     labs(title = "The Least Productive Work Systems",
-         subtitle = "Top 5 Countries",
+         subtitle = "Bottom 5 Countries",
          x = "USD Current PPPs",
          y = NULL,
          caption = "Source: OECD. <i>Gross domestic product per hour worked

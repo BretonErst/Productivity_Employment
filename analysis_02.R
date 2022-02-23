@@ -170,15 +170,41 @@ klusterizado %>%
           plot.caption = element_markdown(color = "darkgrey",
                                           hjust = 0),
           plot.caption.position = "plot") +
-    labs(title = "Group By Cluster",
-         subtitle = "Features by Cluster",
+    labs(title = "How Do Productivity Systems Stack",
+         subtitle = "Productivity Measure by Cluster",
          x = NULL,
          y = NULL,
-         caption = "Source: OECD Stats.
-         <i>Figures in USD current PPPs</i>
+         caption = "Source: OECD Stats 2020.
+         <i>Gross Domestic Product, Gross Domestic Product Per Person
+         Employed, Gross Domestic Product Per Hour Worked,
+         Gross Domestic Product Per Head Of Population,
+         Gross National Income Per Hour Worked.</i>
          <br>Visualization: Juan L. Bretón, PMP (@BretonPmp)") 
-  
-  
+
+
+
+df_sample <- df00 %>% 
+  filter(MEASURE == "CPC") %>% 
+  select(-c(Subject, MEASURE, Measure, Time, `Unit Code`, `PowerCode Code`,
+            `Reference Period Code`, `Reference Period`, PowerCode,
+            Unit, `Flag Codes`, Flags)) %>% 
+  filter(Country %in% c("Mexico", "United States",
+                        "Canada", "Chile", "Ireland",
+                        "Norway", "Spain", "Germany",
+                        "Costa Rica", "Korea", "Colombia",
+                        "Greece", "Portugal", "Switzerland",
+                        "France", "United Kingdom", "Japan",
+                        "Russia", "Turkey", "Italy")) %>% 
+  mutate(SUBJECT = str_match(SUBJECT, "T.(\\w*)")[ , 2]) %>% 
+  pivot_wider(names_from = SUBJECT, 
+              values_from = Value) %>% 
+  filter(TIME == 2020) %>% 
+  select(Country, TIME, GDP) %>% 
+  arrange(desc(GDP))
+
+df_sample %>% 
+  ggplot(aes(x = GDP, y = fct_reorder(Country, GDP))) +
+    geom_bar(stat = "identity")
   
   
   
