@@ -67,7 +67,9 @@ rect.hclust(model_clust,
 fviz_dend(x = model_clust, 
           k = 5, 
           repel = TRUE) +
-  labs(title = "Dendograma")
+  geom_hline(yintercept = 5, 
+             linetype = 2) +
+  labs(title = "How Alike Are Countries In Productivity Measures?")
 
 # Cluster assignation
 clusters <- cutree(tree = model_clust, 
@@ -105,8 +107,11 @@ fviz_cluster(object = list(data = features,
        subtitle = "Work Productivity",
        x = NULL,
        y = NULL,
-       caption = "Source: OECD Stats.
-         <i>Work productivity measures.</i>
+       caption = "Source: OECD Stats 2020. Figures in USD PPPs<br>
+         <i>Gross Domestic Product, Gross Domestic Product Per Person
+         Employed, Gross Domestic Product Per Hour Worked,
+         Gross Domestic Product Per Head Of Population,
+         Gross National Income Per Hour Worked.</i>
          <br>Visualization: Juan L. Bretón, PMP (@BretonPmp)") 
 
 
@@ -126,7 +131,9 @@ nm_clus <- NbClust(data = features, distance = "euclidean",
                    index = "alllong")
 
 # Model fit for kmeans algo
-klus <- kmeans(x = features, centers = 3, nstart = 25)
+klus <- kmeans(x = features, 
+               centers = 4, 
+               nstart = 25)
 
 # Kmeans object
 klus
@@ -136,7 +143,26 @@ fviz_cluster(object = klus,
              data = features,
              repel = TRUE,
              ellipse.type = "euclid",
-             star.plot = FALSE)
+             show.clust.cent = FALSE,
+             star.plot = FALSE) +
+  theme(text = element_text(family = "Optima"),
+        legend.position = "none",
+        panel.background = element_rect(fill = "#F9F9F9"),
+        plot.title.position = "plot",
+        plot.caption = element_markdown(color = "darkgrey",
+                                        hjust = 0),
+        plot.caption.position = "plot") +
+  labs(title = "Countries Clustered By Efficiency of Production Systems",
+       subtitle = "Work Productivity Measures",
+       x = NULL,
+       y = NULL,
+       caption = "Source: OECD Stats 2020. Figures in USD PPPs<br>
+         <i>Gross Domestic Product, Gross Domestic Product Per Person
+         Employed, Gross Domestic Product Per Hour Worked,
+         Gross Domestic Product Per Head Of Population,
+         Gross National Income Per Hour Worked.</i>
+         <br>Visualization: Juan L. Bretón, PMP (@BretonPmp)") 
+  
 
 # Integration of cluster
 klusterizado <- cbind(df01, klus$cluster)
@@ -174,7 +200,7 @@ klusterizado %>%
          subtitle = "Productivity Measure by Cluster",
          x = NULL,
          y = NULL,
-         caption = "Source: OECD Stats 2020.
+         caption = "Source: OECD Stats 2020. Figures in USD PPPs<br>
          <i>Gross Domestic Product, Gross Domestic Product Per Person
          Employed, Gross Domestic Product Per Hour Worked,
          Gross Domestic Product Per Head Of Population,
