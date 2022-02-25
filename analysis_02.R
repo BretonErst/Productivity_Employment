@@ -69,7 +69,11 @@ fviz_dend(x = model_clust,
           repel = TRUE) +
   geom_hline(yintercept = 5, 
              linetype = 2) +
-  labs(title = "How Alike Are Countries In Productivity Measures?")
+  guides(scale = "none") +
+  labs(title = "How Alike Are Countries In Productivity Measures?") -> sp01
+
+# Plot save
+ggsave(filename = "sp_01", plot = sp01, device = "tiff")
 
 # Cluster assignation
 clusters <- cutree(tree = model_clust, 
@@ -88,13 +92,16 @@ pheatmap::pheatmap(mat = features,
                    cluster_cols = FALSE,
                    cutree_rows = 5,
                    fontsize = 6,
-                   main = "How Alike Is Productivity Among Countries?")
+                   main = "How Alike Is Productivity Among Countries?") -> sp02
+
+# Plot save
+ggsave(filename = "sp_02", plot = sp02, device = "tiff")
 
 # Visualization of clusters
 fviz_cluster(object = list(data = features,
                            cluster = clusters),
              show.clust.cent = FALSE,
-             ellipse.type = "euclid",
+             ellipse.type = "ellipse",
              repel = TRUE) +
   theme(text = element_text(family = "Optima"),
         legend.position = "none",
@@ -103,8 +110,8 @@ fviz_cluster(object = list(data = features,
         plot.caption = element_markdown(color = "darkgrey",
                                         hjust = 0),
         plot.caption.position = "plot") +
-  labs(title = "How Alike Are Countries When It Comes To Productivity?",
-       subtitle = "Work Productivity",
+  labs(title = "How Alike Are Countries When It Comes To Work Productivity?",
+       subtitle = "Productivity Measures",
        x = NULL,
        y = NULL,
        caption = "Source: OECD Stats 2020. Figures in USD PPPs<br>
@@ -112,8 +119,10 @@ fviz_cluster(object = list(data = features,
          Employed, Gross Domestic Product Per Hour Worked,
          Gross Domestic Product Per Head Of Population,
          Gross National Income Per Hour Worked.</i>
-         <br>Visualization: Juan L. Bretón, PMP (@BretonPmp)") 
+         <br>Visualization: Juan L. Bretón, PMP (@BretonPmp)") -> sp03
 
+# Plot save
+ggsave(filename = "sp_03", plot = sp03, device = "tiff")
 
 
 ## Clustering kmeans algo
@@ -126,8 +135,11 @@ fviz_nbclust(matrix(features),
              method = "silhouette")
 
 # Tool to find optimal number of clusters
-nm_clus <- NbClust(data = features, distance = "euclidean", 
-                   min.nc = 2, max.nc = 10, method = "kmeans",
+nm_clus <- NbClust(data = features, 
+                   distance = "euclidean", 
+                   min.nc = 2, 
+                   max.nc = 10, 
+                   method = "kmeans",
                    index = "alllong")
 
 # Model fit for kmeans algo
@@ -138,11 +150,11 @@ klus <- kmeans(x = features,
 # Kmeans object
 klus
 
-# Visualization od clusters
+# Visualization of clusters
 fviz_cluster(object = klus, 
              data = features,
              repel = TRUE,
-             ellipse.type = "euclid",
+             ellipse.type = "norm",
              show.clust.cent = FALSE,
              star.plot = FALSE) +
   theme(text = element_text(family = "Optima"),
@@ -161,8 +173,11 @@ fviz_cluster(object = klus,
          Employed, Gross Domestic Product Per Hour Worked,
          Gross Domestic Product Per Head Of Population,
          Gross National Income Per Hour Worked.</i>
-         <br>Visualization: Juan L. Bretón, PMP (@BretonPmp)") 
+         <br>Visualization: Juan L. Bretón, PMP (@BretonPmp)") -> sp04
   
+# Plot save
+ggsave(filename = "sp_04", plot = sp04, device = "tiff")
+
 
 # Integration of cluster
 klusterizado <- cbind(df01, klus$cluster)
@@ -186,7 +201,8 @@ klusterizado %>%
     geom_text_repel(aes(label = Country),
                     size = 2.5,
                     segment.alpha = 0.7,
-                    nudge_x = 0.1) +
+                    nudge_x = 0.1,
+                    max.overlaps = 20) +
     facet_wrap(~ state, 
                scales = "free") +
     theme(text = element_text(family = "Optima"),
@@ -196,7 +212,7 @@ klusterizado %>%
           plot.caption = element_markdown(color = "darkgrey",
                                           hjust = 0),
           plot.caption.position = "plot") +
-    labs(title = "How Do Productivity Systems Stack",
+    labs(title = "How Do Productivity Systems Stack?",
          subtitle = "Productivity Measure by Cluster",
          x = NULL,
          y = NULL,
@@ -205,8 +221,10 @@ klusterizado %>%
          Employed, Gross Domestic Product Per Hour Worked,
          Gross Domestic Product Per Head Of Population,
          Gross National Income Per Hour Worked.</i>
-         <br>Visualization: Juan L. Bretón, PMP (@BretonPmp)") 
+         <br>Visualization: Juan L. Bretón, PMP (@BretonPmp)") -> sp05
 
+# Plot save
+ggsave(filename = "sp_05", plot = sp05, device = "tiff")
 
 
 df_sample <- df00 %>% 
@@ -229,8 +247,13 @@ df_sample <- df00 %>%
   arrange(desc(GDP))
 
 df_sample %>% 
-  ggplot(aes(x = GDP, y = fct_reorder(Country, GDP))) +
-    geom_bar(stat = "identity")
+  ggplot(aes(x = GDP, 
+             y = fct_reorder(Country, GDP))) +
+    geom_bar(stat = "identity",
+             show.legend = FALSE,
+             fill = "steelblue",
+             alpha = 0.7) +
+    labs(y = NULL)
   
   
   
