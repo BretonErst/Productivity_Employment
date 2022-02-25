@@ -67,9 +67,8 @@ rect.hclust(model_clust,
 fviz_dend(x = model_clust, 
           k = 5, 
           repel = TRUE) +
-  geom_hline(yintercept = 5, 
+  geom_hline(yintercept = 5,
              linetype = 2) +
-  guides(scale = "none") +
   labs(title = "How Alike Are Countries In Productivity Measures?") -> sp01
 
 # Plot save
@@ -144,7 +143,7 @@ nm_clus <- NbClust(data = features,
 
 # Model fit for kmeans algo
 klus <- kmeans(x = features, 
-               centers = 4, 
+               centers = 5, 
                nstart = 25)
 
 # Kmeans object
