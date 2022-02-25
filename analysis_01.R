@@ -517,15 +517,14 @@ df02 %>%
           plot.caption = element_markdown(color = "darkgrey",
                                           hjust = 0),
           plot.caption.position = "plot") +
-    labs(title = "How Long To Buy An iPhone 13?",
-         subtitle = "8-hour journeys of work necessary",
-         x = "8-hour journey",
+    labs(title = "How Much Working Time Is Necessary To Buy An iPhone?",
+         subtitle = "Number of 8-hour-work journeys",
+         x = "8-hour-work journey",
          y = NULL,
          caption = "Source: OECD. <i>Gross national income per 
-         hour worked 2020. Iphone 13 priced at USD $999. Values in 
-         USD Current PPPs</i>
-         <br>Visualization: Juan L. Bretón, PMP
-         (@BretonPmp)") +
+         hour worked 2020. Values in 
+         USD Current PPPs. Iphone 12 priced at USD $999.</i>
+         <br>Visualization: Juan L. Bretón, PMP (@BretonPmp)") +
     scale_x_continuous(limits = c(0, 6)) -> wp_08
 
 # Save plot
@@ -536,7 +535,8 @@ ggsave("wp_08", plot = wp_08, device = "tiff")
 df02 %>% 
   filter(Country %in% c("Mexico", "United States",
                         "Canada", "Chile", "Ireland",
-                        "Norway", "Spain")) %>% 
+                        "Norway", "Spain", "Switzerland",
+                        "Korea", "Russia")) %>% 
   mutate(max_va = ifelse(TIME == 2020, Country, NA)) %>% 
   ggplot(aes(x = TIME, 
              y = GNIHRS, 
@@ -560,13 +560,16 @@ df02 %>%
           plot.caption = element_markdown(color = "darkgrey",
                                           hjust = 0),
           plot.caption.position = "plot") +
-    labs(title = "Gross National Income Per Hour Worked",
-         subtitle = "Number of 8-hour journeys of work",
+    labs(title = "Evolution Of Gross National Income Per Hour Worked",
+         subtitle = "Comparable USD from 1970 to 2020",
          x = NULL,
          y = "USD current PPPs",
          caption = "Source: OECD. <i>Gross national income per 
-         hour worked 1970 - 2020. </i>
+         hour worked 1970 - 2020. Figures in USD PPPs. Selected countries.</i>
          <br>Visualization: Juan L. Bretón, PMP (@BretonPmp)") -> wp_09
+
+# Save plot
+ggsave("wp_09", plot = wp_09, device = "tiff")
 
 
 # Data frame for as percent
