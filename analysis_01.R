@@ -501,14 +501,16 @@ df02 %>%
     geom_point(color = "#2471A3",
              alpha = 0.7,
              size = 2) +
-    geom_col(fill = "#2471A3",
-             width = 0.1,
-             alpha= 0.7) +
+    geom_segment(aes(x = 0,
+                     xend = iPhone_index,
+                     yend = fct_reorder(Country, iPhone_index)),
+                 color = "#2471A3",
+                 alpha = 0.7) +
     geom_text(aes(label = format(round(iPhone_index, 1), 
                                  big.mark = ","),
                   hjust = -0.8),
               color = "grey45",
-              size = 3) +
+              size = 3.0) +
     theme(text = element_text(family = "Optima"),
           panel.background = element_rect(fill = "#F9F9F9"),
           panel.grid.major.y = element_blank(),
