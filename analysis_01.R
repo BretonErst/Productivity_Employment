@@ -63,7 +63,7 @@ df00 %>%
          <i>Average hours worked annually per person employed year 2020
          </i><br>Visualization: Juan L. Bretón, PMP 
          (@BretonPmp)") +
-    scale_x_continuous(labels = scales::label_number()) -> wp_02
+    scale_x_continuous(labels = scales::label_number())# -> wp_02
   
 # Plot save
 ggsave(filename = "wp_02", plot = wp_02, device = "tiff")
@@ -146,7 +146,7 @@ df01 %>%
                     segment.alpha = 0.5,
                     segment.linetype = "dotted") +
     scale_x_continuous(limits = c(1970, 2027.5)) +
-    theme(text = element_text(family = "Optima"),
+    theme(text = element_text(family = "Encode Sans Condensed"),
           legend.position = "none",
           panel.background = element_rect(fill = "#FFFFFF"),
           axis.line = element_line(color = "darkgrey"),
@@ -161,7 +161,7 @@ df01 %>%
          caption = "Source: OECD Stats. <i>Gross Domestic Product Per Hour Worked
          1970 - 2020. Selected countries.</i>
          <br>Visualization: Juan L. Bretón, PMP (@BretonPmp)") +
-    scale_y_continuous(labels = scales::dollar_format()) -> wp_04
+    scale_y_continuous(labels = scales::dollar_format()) #-> wp_04
 
 # Save plot
 ggsave(filename = "wp_04", plot = wp_04, device = "tiff")
@@ -209,7 +209,7 @@ df_spread %>%
                    label = scales::dollar(valor_medio)),
                size = 2.5,
                color = "midnightblue") +
-    theme(text = element_text(family = "Optima"),
+    theme(text = element_text(family = "Encode Sans Condensed"),
           legend.position = "none",
           panel.background = element_rect(fill = "#FFFFFF"),
           axis.line = element_line(color = "darkgrey"),
@@ -223,7 +223,7 @@ df_spread %>%
          y = NULL,
          caption = "Source: OECD Stats. <i>Gross Domestic Product per hour worked 
          1990 - 2020. Selected countries. Last available values highlighted 
-         in blue; median value indicated in blue.</i> 
+         in blue; median value indicated by blue line.</i> 
          <br>Visualization: Juan L. Bretón, PMP (@BretonPmp)") +
     scale_x_continuous(limits = c(0, 130),
                        labels = scales::dollar_format(),
@@ -232,7 +232,7 @@ df_spread %>%
                        values = c("#AAAAAA", "darkred")) -> wp_01
 
 # Save plot
-ggsave("wp_01", plot = wp_01, device = "tiff")
+ggsave("plots/wp_01", plot = wp_01, device = "tiff")
 
 
 ## Change in GDPHRS
