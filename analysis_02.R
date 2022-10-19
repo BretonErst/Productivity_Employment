@@ -69,7 +69,7 @@ fviz_dend(x = model_clust,
           repel = TRUE) +
   geom_hline(yintercept = 5,
              linetype = 2) +
-  labs(title = "How Alike Are Countries In Productivity Measures?") -> sp01
+  labs(title = "How Alike Are Countries In Productivity Measures?") #-> sp01
 
 # Plot save
 ggsave(filename = "sp_01", plot = sp01, device = "tiff")
@@ -90,8 +90,10 @@ pheatmap::pheatmap(mat = features,
                    clustering_method = "average",
                    cluster_cols = FALSE,
                    cutree_rows = 5,
-                   fontsize = 6,
-                   main = "How Alike Is Productivity Among Countries?") -> sp02
+                   fontsize = 10,
+                   fontsize_row = 8,
+                   fontsize_col = 6,
+                   main = "How Alike Is Productivity Among Countries?") #-> sp02
 
 # Plot save
 ggsave(filename = "sp_02", plot = sp02, device = "tiff")
@@ -118,7 +120,7 @@ fviz_cluster(object = list(data = features,
          Employed, Gross Domestic Product Per Hour Worked,
          Gross Domestic Product Per Head Of Population,
          Gross National Income Per Hour Worked.</i>
-         <br>Visualization: Juan L. Bretón, PMP (@BretonPmp)") -> sp03
+         <br>Visualization: Juan L. Bretón, PMP (@BretonPmp)") #-> sp03
 
 # Plot save
 ggsave(filename = "sp_03", plot = sp03, device = "tiff")
@@ -172,7 +174,7 @@ fviz_cluster(object = klus,
          Employed, Gross Domestic Product Per Hour Worked,
          Gross Domestic Product Per Head Of Population,
          Gross National Income Per Hour Worked.</i>
-         <br>Visualization: Juan L. Bretón, PMP (@BretonPmp)") -> sp04
+         <br>Visualization: Juan L. Bretón, PMP (@BretonPmp)") #-> sp04
   
 # Plot save
 ggsave(filename = "sp_04", plot = sp04, device = "tiff")
@@ -220,7 +222,7 @@ klusterizado %>%
          Employed, Gross Domestic Product Per Hour Worked,
          Gross Domestic Product Per Head Of Population,
          Gross National Income Per Hour Worked.</i>
-         <br>Visualization: Juan L. Bretón, PMP (@BretonPmp)") -> sp05
+         <br>Visualization: Juan L. Bretón, PMP (@BretonPmp)") #-> sp05
 
 # Plot save
 ggsave(filename = "sp_05", plot = sp05, device = "tiff")
