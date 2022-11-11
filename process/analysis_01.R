@@ -13,13 +13,9 @@ library(ggtext)
 
 
 ## Data acquisition
-df00 <- read_csv("gdp_pc_productivity.csv")
+suppressWarnings(source("source/data_read.R"))
 
-## Code for measure definition
-code_subject <- df00 %>% 
-  select(SUBJECT, Subject, MEASURE, Measure, Unit, PowerCode) %>% 
-  mutate(SUBJECT = str_match(SUBJECT, "T.(\\w*)")[ , 2]) %>% 
-  unique()
+
 
 # Distinct instances of time
 df00 %>% 

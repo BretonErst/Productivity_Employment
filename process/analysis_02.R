@@ -14,15 +14,19 @@ library(cluster)
 library(NbClust)
 
 
+
+
 ## Data acquisition
-df00 <- read_csv("gdp_pc_productivity.csv")
+suppressWarnings(source("source/data_read.R"))
+
+# df00 <- read_csv("gdp_pc_productivity.csv")
 
 
 ## Code for measure definition
-code_subject <- df00 %>% 
-  select(SUBJECT, Subject, MEASURE, Measure, Unit, PowerCode) %>% 
-  mutate(SUBJECT = str_match(SUBJECT, "T.(\\w*)")[ , 2]) %>% 
-  unique()
+# code_subject <- df00 %>% 
+#   select(SUBJECT, Subject, MEASURE, Measure, Unit, PowerCode) %>% 
+#   mutate(SUBJECT = str_match(SUBJECT, "T.(\\w*)")[ , 2]) %>% 
+#   unique()
 
 
 ## Data frame for USD Current PPPs
@@ -69,6 +73,7 @@ fviz_dend(x = model_clust,
           repel = TRUE) +
   geom_hline(yintercept = 5,
              linetype = 2) +
+  ylim(-2, NA) +
   labs(title = "How Alike Are Countries In Productivity Measures?") #-> sp01
 
 # Plot save
